@@ -3,4 +3,5 @@ pattern_list = {
     'number': '^\d*\.?\d*$',
     'integer': '^\d+$',
     'word': '([^\s]+)',
+    'data': '(.*)',
 }

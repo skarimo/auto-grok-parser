@@ -7,7 +7,6 @@ class Parser:
         self.raw_log = raw_log
         self.grok_parser = []
 
-
     def build_rule(self, pattern, name):
         # rule = "%{"+ "%s:%s" % (pattern, pattern) + "}"
         # rule = '%{{{0}:{1}}}'.format(pattern, pattern)
