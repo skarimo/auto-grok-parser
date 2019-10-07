@@ -1,8 +1,8 @@
 import click
 from .parser import Parser
 
-
 def main():
+    #initiate a global variable
     global parser_class
 
     click.clear()
@@ -11,8 +11,10 @@ def main():
     raw_log = click.prompt('Please enter a raw log line', type=str)
     parser_class = Parser(raw_log)
 
+    #launch the main loop which handles attribute/divider prompts
     main_prompt_loop()
 
+    #final message before the application exits
     end_message()
 
 def main_prompt_loop():
