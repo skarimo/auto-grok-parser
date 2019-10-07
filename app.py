@@ -1,6 +1,4 @@
 import click
-import os
-import re
 from parser import Parser
 
 def app():
