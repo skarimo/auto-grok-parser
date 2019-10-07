@@ -7,7 +7,7 @@ def app():
     global parser_class
 
     click.clear()
-    click.secho('WELCOME TO CLI GROK PARSER HELPER', blink=True, bold=True)
+    click.secho('WELCOME TO CLI GROK PARSING HELPER', blink=True, bold=True)
 
     raw_log = click.prompt('Please enter a raw log line', type=str)
     parser_class = Parser(raw_log)
@@ -63,6 +63,9 @@ def end_message():
     click.echo('')
     click.echo('Created rule:')
     click.secho('new_rule ' + ''.join(parser_class.grok_parser), bg='red', fg='white', bold=True)
+    click.echo('')
+
+    click.secho("Feel free to give some feedback - Sherzod", bg='yellow', fg='black')
 
 if __name__ == '__main__':
     app()
