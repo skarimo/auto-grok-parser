@@ -1,63 +1,59 @@
 import click
 import os
+import re
 from parser import Parser
 
 def main_app():
-    global raw_log
-    global raw_log_display
     global parser_class
+    global raw_log_display
+
+    click.clear()
+    click.secho('WELCOME', blink=True, bold=True)
 
     raw_log = click.prompt('Please enter a raw log line', type=str)
     raw_log_display = raw_log
-    #initiate the parser with the raw log sample.
     parser_class = Parser(raw_log)
 
-    main_parser_loop()
-
-    print("Current Rule:", parser_class.grok_parser)
-
-def main_parser_loop():
-    global raw_log
-    global raw_log_display
-    global parser_class
+    click.clear()
 
     while True:
-        print("Current Raw Log:", raw_log_display)
-        print("Current Rule:", parser_class.grok_parser)
-
-        end_index = click.prompt('Select the index of last character or type "end" to finish', type=int, default=-1)
-        if end_index == "end":
+        print_raw_log_and_current_rule()
+        attribute_input = click.prompt('Copy paste the first/next attribute value', type=str)
+        if attribute_input.lower() == 'end':
             break
-        elif end_index == -1:
-            value_selected = raw_log_display[0:len(raw_log_display)]
-            parser_class.match_string(value_selected)
+        else:
+            attribute_name = click.prompt('Name the attribute: ' + attribute_input, type=str)
+            # raw_log_display = re.sub(attribute_input,'',raw_log_display,count=1)
+            raw_log_display = raw_log_display.replace(attribute_input, '', 1)
+            parser_class.match_string(attribute_name, attribute_input)
+            click.clear()
+
+        print_raw_log_and_current_rule()
+        divider_input = click.prompt('Copy paste the divider | type [n] if no divider', type=str)
+        if divider_input.lower() == 'end':
             break
+        elif divider_input.lower() == 'n':
+            pass
+        else:
+            raw_log_display = raw_log_display.replace(divider_input, '', 1)
+            parser_class.append_divider(divider_input)
+            click.clear()
+            
+    click.clear()
+    click.echo('Created rule:')
+    click.secho('new_rule ' + ''.join(parser_class.grok_parser), bg='red', fg='white')
 
-        value_selected = raw_log_display[0:end_index+1]
-        parser_class.match_string(value_selected)
-        raw_log_display = raw_log_slicer(raw_log_display, end_index+1)
-        os.system('clear')
-
-        print("Current Raw Log:", raw_log_display)
-        print("Current Rule:", parser_class.grok_parser)
-
-
-        divider_index = click.prompt('is next character divider [y=yes, n]? Type "end" to finish',)
-        if divider_index == "end":
-            break
-        elif divider_index.lower() == 'y':
-            parser_class.append_divider(raw_log_display[0])
-            raw_log_display = raw_log_slicer(raw_log_display, 1)
-        os.system('clear')
-
-
-
-def raw_log_slicer(raw_log_display, end):
-    return raw_log_display[:0] + raw_log_display[end:]
+def print_raw_log_and_current_rule():
+    global parser_class
+    global raw_log_display
+    click.secho('new_rule ' + ''.join(parser_class.grok_parser), bg='red', fg='white')
+    click.echo('')
+    click.echo('Raw Log:')
+    click.secho(raw_log_display, bg='blue', fg='white')
+    click.secho('TYPE "end" if finished', bg='white', fg='black')
 
 
-
+    pass
 
 if __name__ == '__main__':
-    os.system('clear')
     main_app()
