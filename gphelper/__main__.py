@@ -19,6 +19,11 @@ def main_prompt_loop():
     global parser_class
     not_finished_parsing = True
 
+    res = click.prompt('Is the initial value a divider? yN', type=str, default="N")
+
+    if res.lower() =='y':
+        divider_prompt()
+
     while len(parser_class.raw_log_display) != 0 and not_finished_parsing:
         attribute_prompt()
         if len(parser_class.raw_log_display) == 0:
@@ -41,14 +46,13 @@ def divider_prompt():
         print_raw_log_and_current_rule()
         divider_input = click.prompt('Copy paste the divider | type [n] if no divider', type=str)
         if parser_class.raw_log_display.startswith(divider_input):
-            if divider_input.lower() == 'end':
-                return False
-            elif divider_input.lower() == 'n':
-                return
-            else:
-                parser_class.handle_divider(divider_input)
-                click.clear()
-                return True
+            parser_class.handle_divider(divider_input)
+            click.clear()
+            return True
+        elif divider_input.lower() == 'end':
+            return False
+        elif divider_input.lower() == 'n':
+            return True
 
 def print_raw_log_and_current_rule():
     global parser_class

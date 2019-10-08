@@ -17,7 +17,7 @@ class Parser:
     def find_pattern(self, attribute_name, attribute_input):
         for pattern in pattern_list:
             match = re.match(pattern_list[pattern], attribute_input)
-            if (match != None) and (match.group() == attribute_input) and (self.raw_log_display.startswith(attribute_input)):
+            if (match != None) and len(match.group()) > 1 and (match.group() == attribute_input) and (self.raw_log_display.startswith(attribute_input)):
                 self.build_rule(pattern, attribute_name)
                 if pattern == 'notSpace':
                     attribute_input = attribute_input[:-1]
