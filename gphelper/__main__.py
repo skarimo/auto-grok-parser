@@ -10,39 +10,45 @@ def main():
 
     raw_log = click.prompt('Please enter a raw log line', type=str)
     parser_class = Parser(raw_log)
-
     #launch the main loop which handles attribute/divider prompts
     main_prompt_loop()
-
     #final message before the application exits
     end_message()
 
 def main_prompt_loop():
     global parser_class
+    not_finished_parsing = True
 
-    while len(parser_class.raw_log_display) != 0:
+    while len(parser_class.raw_log_display) != 0 and not_finished_parsing:
+        attribute_prompt()
+        if len(parser_class.raw_log_display) == 0:
+            break
+        not_finished_parsing = divider_prompt()
+
+def attribute_prompt():
+    while True:
         click.clear()
         print_raw_log_and_current_rule()
         attribute_input = click.prompt('Copy paste the first/next attribute value', type=str)
-        if attribute_input.lower() == 'end':
-            break
-        else:
+        if parser_class.raw_log_display.startswith(attribute_input):
             attribute_name = click.prompt('Name the attribute: ' + attribute_input, type=str)
             parser_class.handle_attribute(attribute_name, attribute_input)
-            click.clear()
-
-        if len(parser_class.raw_log_display) == 0:
             break
 
+def divider_prompt():
+    while True:
+        click.clear()
         print_raw_log_and_current_rule()
         divider_input = click.prompt('Copy paste the divider | type [n] if no divider', type=str)
-        if divider_input.lower() == 'end':
-            break
-        elif divider_input.lower() == 'n':
-            pass
-        else:
-            parser_class.handle_divider(divider_input)
-            click.clear()
+        if parser_class.raw_log_display.startswith(divider_input):
+            if divider_input.lower() == 'end':
+                return False
+            elif divider_input.lower() == 'n':
+                return
+            else:
+                parser_class.handle_divider(divider_input)
+                click.clear()
+                return True
 
 def print_raw_log_and_current_rule():
     global parser_class
