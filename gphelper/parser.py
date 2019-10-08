@@ -1,5 +1,6 @@
 from .patterns import pattern_list
 import re
+import time
 
 class Parser:
     def __init__(self, raw_log = None):
@@ -17,12 +18,14 @@ class Parser:
     def find_pattern(self, attribute_name, attribute_input):
         for pattern in pattern_list:
             match = re.match(pattern_list[pattern], attribute_input)
-            if (match != None) and (match.group() == attribute_input):
+            if (match != None) and (match.group() == attribute_input) and (attribute_input in self.raw_log_display):
                 self.build_rule(pattern, attribute_name)
+                if pattern == 'notSpace':
+                    attribute_input = attribute_input[:-1]
+                self.raw_log_display = self.raw_log_display.replace(attribute_input, '', 1)
                 break
 
     def handle_attribute(self, attribute_name, attribute_input):
-        self.raw_log_display = self.raw_log_display.replace(attribute_input, '', 1)
         self.find_pattern(attribute_name, attribute_input)
 
     def handle_divider(self, divider_input):

@@ -48,25 +48,22 @@ def print_raw_log_and_current_rule():
     global parser_class
 
     click.secho('new_rule ' + ''.join(parser_class.grok_parser), bg='red', fg='white')
-    click.echo('')
-    click.echo('')
-    click.echo('')
-    click.echo('Raw Log:')
-    click.secho(parser_class.raw_log_display, bg='blue', fg='white')
-    click.secho('TYPE "end" if finished', bg='white', fg='black')
+    click.echo('\n')
+    print_raw_log()
 
 def end_message():
     global parser_class
 
     click.clear()
-    click.echo('Inputted log:')
+    click.echo('Raw log:')
     click.secho(parser_class.raw_log, bg='blue', fg='white')
-    click.echo('')
     click.echo('Created rule:')
     click.secho('new_rule ' + ''.join(parser_class.grok_parser), bg='red', fg='white', bold=True)
-    click.echo('')
-
     click.secho("Feel free to give some feedback - Sherzod", bg='yellow', fg='black')
+
+def print_raw_log():
+    click.echo('Raw log:')
+    click.secho(parser_class.raw_log_display, bg='blue', fg='white')
 
 if __name__ == '__main__':
     main()
