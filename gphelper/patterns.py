@@ -10,5 +10,5 @@ pattern_list = {
     'notSpace': '^[^\s]*\s',
     'doubleQuotedString': '"([^\\"]|\\\\|\\")*"',
     'singleQuotedString': "([^\\']|\\\\|\\')*'",
-    'data': '(.*)',
+    # 'data': '(.*)',
 }

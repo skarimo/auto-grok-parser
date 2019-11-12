@@ -1,5 +1,6 @@
 from .patterns import pattern_list
 import re
+import json
 
 class Parser:
     def __init__(self, raw_log = None):
@@ -14,7 +15,8 @@ class Parser:
         rule = '%{{{0}:{1}}}'.format(pattern, attribute_name)
         self.grok_parser.append(rule)
 
-    def find_pattern(self, attribute_name, attribute_input):
+    def find_pattern(self, attribute_input, attribute_name=None):
+        #match the patterns
         for pattern in pattern_list:
             match = re.match(pattern_list[pattern], attribute_input)
             if (match != None) and len(match.group()) > 1 and (match.group() == attribute_input) and (self.raw_log_display.startswith(attribute_input)):
@@ -22,7 +24,19 @@ class Parser:
                 if pattern == 'notSpace':
                     attribute_input = attribute_input[:-1]
                 self.raw_log_display = self.raw_log_display.replace(attribute_input, '', 1)
-                break
+                return
+
+        #validate if attribute is json format
+        if self.is_json(attribute_input):
+            self.raw_log_display = self.raw_log_display.replace(attribute_input, '', 1)
+            self.grok_parser.append("%{data::json}")
+            return
+        #if no matchers, build with `data`
+        else:
+            self.build_rule("data", attribute_name)
+            self.raw_log_display = self.raw_log_display.replace(attribute_input, '', 1)
+            return
+
 
     def handle_attribute(self, attribute_name, attribute_input):
         self.find_pattern(attribute_name, attribute_input)
@@ -32,3 +46,10 @@ class Parser:
         # escaped_divider = re.escape(divider_input)
         self.grok_parser.append(escaped_divider)
         self.raw_log_display = self.raw_log_display.replace(divider_input, '', 1)
+
+    def is_json(self, log):
+        try:
+            json_object = json.loads(log)
+        except ValueError as e:
+            return False
+        return True

@@ -37,7 +37,10 @@ def attribute_prompt():
         attribute_input = click.prompt('Copy paste the first/next attribute value', type=str)
         if parser_class.raw_log_display.startswith(attribute_input):
             attribute_name = click.prompt('Name the attribute: ' + attribute_input, type=str)
-            parser_class.handle_attribute(attribute_name, attribute_input)
+            while attribute_name.isnumeric() == True:
+                click.echo('Name cannot be an number')
+                attribute_name = click.prompt('Name the attribute: ' + attribute_input, type=str)
+            parser_class.handle_attribute(attribute_input, attribute_name)
             break
 
 def divider_prompt():
